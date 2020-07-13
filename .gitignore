@@ -101,6 +101,8 @@ ENV/
 # mypy
 .mypy_cache/
 
+./models/*
+
 .DS_Store
 *.sqlite3
 media/
