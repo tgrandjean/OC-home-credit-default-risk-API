@@ -25,7 +25,7 @@ SECRET_KEY = '%uk^2ko+@trzlo+_v$k)c9)=$p7u4rza=c30=ofe36lu*ql_%-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['http://test-env.kpnmxpwwqk.eu-west-3.elasticbeanstalk.com/']
+ALLOWED_HOSTS = ['ec2-15-188-10-127.eu-west-3.compute.amazonaws.com']
 
 
 # Application definition
@@ -120,7 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = 'staticfiles'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
