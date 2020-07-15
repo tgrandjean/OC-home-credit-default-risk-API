@@ -31,7 +31,7 @@ else:
 if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1']
 else:
-    ALLOWED_HOSTS = ['ec2-15-188-10-127.eu-west-3.compute.amazonaws.com']
+    ALLOWED_HOSTS = ['api.hc.cornet-grandjean.com']
 
 
 # Application definition
