@@ -89,6 +89,18 @@ DATABASES = {
     }
 }
 
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'api-hc',
+            'USER': 'postgres',
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': 'api-hc.c7ll2bqcrvxz.eu-west-3.rds.amazonaws.com',
+            'PORT': 5432,
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -136,5 +148,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication'
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+
 }
