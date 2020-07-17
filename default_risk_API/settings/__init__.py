@@ -22,16 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-if DEBUG:
-    SECRET_KEY = '%uk^2ko+@trzlo+_v$k)c9)=$p7u4rza=c30=ofe36lu*ql_%-'
-else:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = '%uk^2ko+@trzlo+_v$k)c9)=$p7u4rza=c30=ofe36lu*ql_%-'
 
 
-if DEBUG:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-else:
-    ALLOWED_HOSTS = ['api.hc.cornet-grandjean.com']
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -89,18 +84,6 @@ DATABASES = {
     }
 }
 
-if not DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'postgres',
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': 'api-hc.c7ll2bqcrvxz.eu-west-3.rds.amazonaws.com',
-            'PORT': 5432,
-        }
-    }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -153,11 +136,3 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 
 }
-
-
-# HTTPS
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
