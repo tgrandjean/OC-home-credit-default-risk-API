@@ -11,9 +11,9 @@ class Application(models.Model):
     ]
 
     sk_id_curr = models.IntegerField(primary_key=True, unique=True)
-    age = models.FloatField()
+    age = models.FloatField(help_text='Age of the appliant')
     occupation_type = models.CharField(max_length=60)
-    amt_income_total = models.FloatField()
+    amt_income_total = models.FloatField(help_text='Total income of the appliant')
     amt_credit = models.FloatField()
     name_contract_type = models.CharField(max_length=16,
                                           choices=NAME_CONTRACT_TYPE_CHOICES,

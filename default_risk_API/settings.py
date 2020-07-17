@@ -29,7 +29,7 @@ else:
 
 
 if DEBUG:
-    ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 else:
     ALLOWED_HOSTS = ['api.hc.cornet-grandjean.com']
 
@@ -93,7 +93,7 @@ if not DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'api-hc',
+            'NAME': 'postgres',
             'USER': 'postgres',
             'PASSWORD': os.environ.get('DB_PASSWORD'),
             'HOST': 'api-hc.c7ll2bqcrvxz.eu-west-3.rds.amazonaws.com',
@@ -156,7 +156,8 @@ REST_FRAMEWORK = {
 
 
 # HTTPS
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
