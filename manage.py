@@ -3,6 +3,8 @@
 import os
 import sys
 
+# HACK: Need to import LabelEncoder for preprocessing_pipeline
+from api.assets import LabelEncoder 
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'default_risk_API.settings')
