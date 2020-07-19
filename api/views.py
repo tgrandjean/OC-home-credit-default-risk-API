@@ -6,6 +6,8 @@ import pandas as pd
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.forms.models import model_to_dict
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,7 +25,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 # Create your views here.
 
 def infer(data):
-    print('Make inference')
     data = pd.DataFrame(data).T
     with open(os.path.join(settings.BASE_DIR, 'models', 'model_V0.pickle'),
               'rb') as f:
@@ -49,14 +50,23 @@ class Predict(APIView):
         sk_id_curr = data.data['app_id']
         amt = data.data['amt']
         amt_annuity = data.data['amt_annuity']
-        data = pd.read_csv(os.path.join(settings.BASE_DIR,
-                           'models', 'features_final.csv'))
+        app = get_object_or_404(Application, pk=sk_id_curr)
+        print(model_to_dict(app))
+        data = pd.DataFrame.from_records([model_to_dict(app)])
+        data.columns = [x.upper() for x in data.columns]
+        cols = []
+        for col in data.columns:
+            if col.endswith('_ACTIVE'):
+                col = col.replace('_ACTIVE_ACTIVE', '_ACTIVE_Active')
+            elif col.endswith('_CLOSED'):
+                col = col.replace('_CLOSED', '_Closed')
+            cols.append(col)
+        data.columns = cols
         data.set_index('SK_ID_CURR', inplace=True)
-        data.drop(columns='TARGET', inplace=True)
-        input_data = data.loc[sk_id_curr].copy()
-        input_data['AMT_CREDIT'] = amt
-        input_data['AMT_ANNUITY'] = amt_annuity
-        prob = infer(input_data)
+        data['AMT_CREDIT'] = amt
+        data['AMT_ANNUITY'] = amt_annuity
+        print(data)
+        prob = infer(data.T)
         res = {"refund probability": (1 - prob) * 100}
         return Response(res)
 

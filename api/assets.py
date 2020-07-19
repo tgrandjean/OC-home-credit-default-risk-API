@@ -1,3 +1,8 @@
+# HACK: Need to import this when the django app is launch.
+# Import this in manage.py in DEBUG mode
+# Import this in gunicorn in PRODUCTION mode.
+# TODO: Fix this...
+
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
