@@ -47,11 +47,10 @@ class Predict(APIView):
     def post(self, request):
         data = PredictionSerializer(data=request.data)
         data.is_valid()
-        sk_id_curr = data.data['app_id']
-        amt = data.data['amt']
+        sk_id_curr = data.data['sk_id_curr']
+        amt = data.data['amt_credit']
         amt_annuity = data.data['amt_annuity']
         app = get_object_or_404(Application, pk=sk_id_curr)
-        print(model_to_dict(app))
         data = pd.DataFrame.from_records([model_to_dict(app)])
         data.columns = [x.upper() for x in data.columns]
         cols = []
@@ -65,9 +64,10 @@ class Predict(APIView):
         data.set_index('SK_ID_CURR', inplace=True)
         data['AMT_CREDIT'] = amt
         data['AMT_ANNUITY'] = amt_annuity
-        print(data)
         prob = infer(data.T)
-        res = {"refund probability": (1 - prob) * 100}
+        res = dict()
+        res['input data'] = data
+        res['Model response'] = (1 - prob) * 100
         return Response(res)
 
 

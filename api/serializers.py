@@ -3,9 +3,9 @@ from api.models import Application
 
 
 class PredictionSerializer(serializers.Serializer):
-    app_id = serializers.IntegerField()
-    amt = serializers.FloatField()
-    amt_annuity = serializers.FloatField()
+    sk_id_curr = serializers.IntegerField(help_text='ID of the application')
+    amt_credit = serializers.FloatField(help_text='Credit amount')
+    amt_annuity = serializers.FloatField(help_text='Annuity amount')
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
