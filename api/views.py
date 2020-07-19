@@ -26,7 +26,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 def infer(data):
     data = pd.DataFrame(data).T
-    with open(os.path.join(settings.BASE_DIR, 'models', 'model_V0.pickle'),
+    with open(os.path.join(settings.BASE_DIR, 'models', 'model_v0.pickle'),
               'rb') as f:
           model = pickle.load(f)
     with open(os.path.join(settings.BASE_DIR, 'models',
