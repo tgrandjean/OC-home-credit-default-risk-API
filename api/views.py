@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -75,3 +76,15 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     """End point for application management."""
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+
+    @action(detail=False, methods=['GET'])
+    def last_record(self, request):
+        last_rec = Application.objects.order_by('pk').last()
+        serializer = self.get_serializer(last_rec)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def first_record(self, request):
+        first_rec = Application.objects.order_by('pk').first()
+        serializer = self.get_serializer(first_rec)
+        return Response(serializer.data)
