@@ -10,7 +10,7 @@ class ApplicationFilter(filters.FilterSet):
     min_days_birth = filters.NumberFilter(field_name='days_birth',
                                           lookup_expr='gte')
     max_days_birth = filters.NumberFilter(field_name='days_birth',
-                                          lookup_expr='gte')
+                                          lookup_expr='lte')
     class Meta:
         model = Application
         fields = ['min_sk_id_curr', 'max_sk_id_curr',
