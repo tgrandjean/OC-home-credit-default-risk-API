@@ -17,6 +17,21 @@ from rest_framework.authtoken.models import Token
 from api.serializers import PredictionSerializer, ApplicationSerializer
 from api.models import Application
 
+ORDERED_COLS = ['DAYS_BIRTH',
+                'OCCUPATION_TYPE',
+                'AMT_INCOME_TOTAL',
+                'AMT_CREDIT',
+                'NAME_CONTRACT_TYPE',
+                'AMT_ANNUITY',
+                'EXT_SOURCE_1',
+                'EXT_SOURCE_2',
+                'EXT_SOURCE_3',
+                'CREDIT_ACTIVE_Active',
+                'CREDIT_ACTIVE_Closed',
+                'REPORTED_DPD',
+                'BAD_PAYMENT_HC',
+                'ACTIVE_CRED_HC',
+                'TOTAL_PREV_HC']
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
@@ -63,6 +78,7 @@ class Predict(APIView):
             cols.append(col)
         data.columns = cols
         data.set_index('SK_ID_CURR', inplace=True)
+        data = data[ORDERED_COLS]
         data['AMT_CREDIT'] = amt
         data['AMT_ANNUITY'] = amt_annuity
         prob = infer(data.T)
@@ -88,3 +104,21 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         first_rec = Application.objects.order_by('pk').first()
         serializer = self.get_serializer(first_rec)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['GET'])
+    def predict(self, request, pk=None):
+        app = Application.objects.get(pk=pk)
+        data = pd.DataFrame.from_records([model_to_dict(app)])
+        data.columns = [x.upper() for x in data.columns]
+        cols = []
+        for col in data.columns:
+            if col.endswith('_ACTIVE'):
+                col = col.replace('_ACTIVE_ACTIVE', '_ACTIVE_Active')
+            elif col.endswith('_CLOSED'):
+                col = col.replace('_CLOSED', '_Closed')
+            cols.append(col)
+        data.columns = cols
+        data.drop(columns='SK_ID_CURR', inplace=True)
+        data = data[ORDERED_COLS]
+        prob = infer(data.T)
+        return Response({'Model response': (1 - prob) * 100})
