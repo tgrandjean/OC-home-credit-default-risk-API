@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -16,6 +17,7 @@ from rest_framework.authtoken.models import Token
 
 from api.serializers import PredictionSerializer, ApplicationSerializer
 from api.models import Application
+from api.filters import ApplicationFilter
 
 ORDERED_COLS = ['DAYS_BIRTH',
                 'OCCUPATION_TYPE',
@@ -101,6 +103,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     """End point for application management."""
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = ApplicationFilter
 
     @action(detail=False, methods=['GET'])
     def last_record(self, request):
