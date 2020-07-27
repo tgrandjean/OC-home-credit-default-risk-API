@@ -8,7 +8,7 @@ router.register(r'applications', views.ApplicationViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('predict/', views.Predict.as_view()),
-    path('explainer', views.model_explainer),
+    path('explainer/', views.ModelExplainer.as_view()),
     path('api-auth/', include('rest_framework.urls',
                               namespace='rest_framework')),
 ]
